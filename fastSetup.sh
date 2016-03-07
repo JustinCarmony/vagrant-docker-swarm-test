@@ -24,6 +24,13 @@ parallel_provision() {
         sh -c 'vagrant provision BOXNAME >log/BOXNAME.out.txt 2>&1 || echo "Error Occurred: BOXNAME"'
 }
 
+parallel_minion_restart() {
+    while read box; do
+        echo $box
+    done | xargs -P $MAX_PROCS -I"BOXNAME" \
+        sh -c 'vagrant ssh BOXNAME -c "service salt-minion restart"'
+}
+
 # Deploy servers but do not provision (yet)
 # Don't do it in parallel in case you've deploy many (i.e. 5+) 
 # and you'll exceed the Rate Limit
@@ -43,16 +50,17 @@ vagrant status | egrep --color=no '(digital_ocean)' | awk '{ print $1 }' | paral
 sleep 30
 vagrant ssh salt -c "sudo salt-key -A --yes"
 
-time vagrant reload
+vagrant status | egrep --color=no '(digital_ocean)' | awk '{ print $1 }' | parallel_minion_restart
 
+sleep 10
 vagrant ssh salt -c "sudo salt-key -A --yes"
 
 # Call state.highstate on master
 echo "Calling Highstate on Master"
-time vagrant ssh salt -c "sudo salt-call state.highstate"
+vagrant ssh salt -c "sudo salt-call state.highstate"
 
 echo "Calling Highstate on All Servers"
-time vagrant ssh salt -c "sudo salt \* state.highstate"
+vagrant ssh salt -c "sudo salt \\* state.highstate"
 
-echo "Master's IP"
-vagrant ssh salt -c "sudo ifconfig"
+echo "Servers Reporting in for Duty"
+vagrant ssh salt -c "sudo salt \\* test.ping"
