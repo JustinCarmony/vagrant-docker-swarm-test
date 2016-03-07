@@ -1,2 +1,4 @@
 config/prefs.rb
 .vagrant
+deploy/hosts
+log

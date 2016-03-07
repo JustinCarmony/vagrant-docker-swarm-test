@@ -2,6 +2,7 @@
 
 # Remove provision finished to re-run
 #rm /root/provision-finished.txt
+cat /vagrant/deploy/hosts/$1 > /etc/hosts
 
 cat /vagrant/deploy/config/master > /etc/salt/master
 cat /vagrant/deploy/config/minion > /etc/salt/minion

@@ -10,11 +10,11 @@ require File.join(File.dirname(__FILE__), './', 'config/prefs.rb')
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Hostname Manager
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = false
-  config.hostmanager.manage_guest = true
-  config.hostmanager.ignore_private_ip = false
-  config.hostmanager.include_offline = true
+  #config.hostmanager.enabled = true
+  #config.hostmanager.manage_host = false
+  #config.hostmanager.manage_guest = true
+  #config.hostmanager.ignore_private_ip = false
+  #config.hostmanager.include_offline = true
 
 
   # Digital Ocean Configuration
@@ -32,40 +32,40 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define :salt , primary: true do |srv|
-    srv.vm.hostname = 'salt.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-master.sh master"
+    srv.vm.hostname = 'salt'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-master.sh salt"
     srv.vm.box = "dummy"
 
     srv.hostmanager.aliases = %w(salt)
   end
 
   config.vm.define :master1 do |srv|
-    srv.vm.hostname = 'master1.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh client"
+    srv.vm.hostname = 'master1'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh master1"
     srv.vm.box = "dummy"
   end
 
   config.vm.define :master2 do |srv|
-    srv.vm.hostname = 'master2.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh client"
+    srv.vm.hostname = 'master2'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh master2"
     srv.vm.box = "dummy"
   end
 
   config.vm.define :node1 do |srv|
-    srv.vm.hostname = 'node1.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh client"
+    srv.vm.hostname = 'node1'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh node1"
     srv.vm.box = "dummy"
   end
 
   config.vm.define :node2 do |srv|
-    srv.vm.hostname = 'node2.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh client"
+    srv.vm.hostname = 'node2'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh node2"
     srv.vm.box = "dummy"
   end
 
   config.vm.define :node3 do |srv|
-    srv.vm.hostname = 'node3.swarm.demo'
-    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh client"
+    srv.vm.hostname = 'node3'
+    srv.vm.provision :shell, :inline => "sudo bash /vagrant/deploy/install-salt-minion.sh node3"
     srv.vm.box = "dummy"
   end
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #rm /root/provision-finished.txt
+cat /vagrant/deploy/hosts/$1 > /etc/hosts
 
 echo "Checking Salt Installation"
 if [ ! -f /root/provision-finished.txt ]; then
