@@ -48,19 +48,32 @@ vagrant status | egrep --color=no '(digital_ocean)' | awk '{ print $1 }' | paral
 
 # Accept the Salt Minions
 sleep 30
-vagrant ssh salt -c "sudo salt-key -A --yes"
+vagrant ssh salt -c "salt-key -A --yes"
 
 vagrant status | egrep --color=no '(digital_ocean)' | awk '{ print $1 }' | parallel_minion_restart
 
 sleep 10
-vagrant ssh salt -c "sudo salt-key -A --yes"
+vagrant ssh salt -c "salt-key -A --yes"
 
 # Call state.highstate on master
 echo "Calling Highstate on Master"
-vagrant ssh salt -c "sudo salt-call state.highstate"
+vagrant ssh salt -c "salt-call state.highstate"
 
 echo "Calling Highstate on All Servers"
-vagrant ssh salt -c "sudo salt \\* state.highstate"
+vagrant ssh salt -c "salt \\* state.highstate"
 
 echo "Servers Reporting in for Duty"
-vagrant ssh salt -c "sudo salt \\* test.ping"
+vagrant ssh salt -c "salt \\* test.ping"
+
+
+
+## Project Specific setups ##
+
+bash bin/setupConsul.sh
+vagrant ssh salt -c "salt \\* service.restart docker"
+
+
+
+
+
+
