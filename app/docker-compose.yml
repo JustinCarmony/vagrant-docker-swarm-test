@@ -2,16 +2,25 @@ version: "2"
 services:
   nginx:
     image: justincarmony/nginx-hello-world
+    links:
+      - app1
+      - app2
     expose:
+      - 8080
+    ports:
       - 8080
 
   app1:
     image: justincarmony/node-redis-hello-world
+    links:
+      - redis
     expose:
       - 8888
 
   app2:
     image: justincarmony/node-redis-hello-world
+    links:
+      - redis
     expose:
       - 8888
 
